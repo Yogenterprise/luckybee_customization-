@@ -3,8 +3,8 @@ from frappe import _
 def get_data():
 	return [
 		{
-			"module_name": "Luckybee Customization",
+			"module_name": "luckybee_customization",
 			"type": "module",
-			"label": _("Luckybee Customization")
+			"label": _("luckybee_customization")
 		}
 	]

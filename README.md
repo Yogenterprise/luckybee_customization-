@@ -1,6 +1,6 @@
-## Luckybee Customization
+## luckybee_customization
 
-for e_commerce intigration
+luckybee_customization
 
 #### License
 
