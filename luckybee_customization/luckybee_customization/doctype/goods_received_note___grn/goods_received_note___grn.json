@@ -1,0 +1,123 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-19 18:23:31.092582",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "purchase",
+  "product",
+  "purchase_quantity",
+  "received_quantity",
+  "brand",
+  "mrp",
+  "ean",
+  "subcategory",
+  "quality_check",
+  "other_reason",
+  "print_barcode",
+  "column_break_column",
+  "purchase_invoice"
+ ],
+ "fields": [
+  {
+   "fieldname": "purchase",
+   "fieldtype": "Select",
+   "label": "Purchase",
+   "options": "Non Asin\nAsin"
+  },
+  {
+   "fieldname": "purchase_invoice",
+   "fieldtype": "Link",
+   "label": "Purchase Invoice",
+   "options": "Purchase Invoice"
+  },
+  {
+   "fieldname": "product",
+   "fieldtype": "Link",
+   "label": "Product",
+   "options": "Item"
+  },
+  {
+   "fieldname": "purchase_quantity",
+   "fieldtype": "Data",
+   "label": "Purchase Quantity"
+  },
+  {
+   "fieldname": "received_quantity",
+   "fieldtype": "Data",
+   "label": "Received Quantity"
+  },
+  {
+   "fetch_from": "product.brand",
+   "fieldname": "brand",
+   "fieldtype": "Data",
+   "label": "Brand"
+  },
+  {
+   "fetch_from": "product.custom_mrp",
+   "fieldname": "mrp",
+   "fieldtype": "Data",
+   "label": "MRP"
+  },
+  {
+   "fetch_from": "product.ean",
+   "fieldname": "ean",
+   "fieldtype": "Data",
+   "label": "EAN"
+  },
+  {
+   "fetch_from": "product.custom_sub_category",
+   "fieldname": "subcategory",
+   "fieldtype": "Data",
+   "label": "Subcategory"
+  },
+  {
+   "fieldname": "quality_check",
+   "fieldtype": "Select",
+   "label": "QC Pass (Yes/No)",
+   "options": "\nYes\nNo"
+  },
+  {
+   "depends_on": "quality_check == \"No\";",
+   "fieldname": "other_reason",
+   "fieldtype": "Long Text",
+   "label": "Other Reason"
+  },
+  {
+   "fieldname": "print_barcode",
+   "fieldtype": "Button",
+   "label": "Print Barcode"
+  },
+  {
+   "fieldname": "column_break_column",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-03-19 18:28:53.105010",
+ "modified_by": "Administrator",
+ "module": "luckybee_customization",
+ "name": "Goods Received Note - GRN",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

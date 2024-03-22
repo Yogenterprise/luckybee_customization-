@@ -1,0 +1,25 @@
+{
+ "cards": [],
+ "charts": [
+  {
+   "chart": "Total Purchase By Category",
+   "width": "Half"
+  },
+  {
+   "chart": "Total Sales By Category",
+   "width": "Half"
+  }
+ ],
+ "creation": "2024-03-20 17:40:26.019062",
+ "dashboard_name": "LuckyBee Dashboard",
+ "docstatus": 0,
+ "doctype": "Dashboard",
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "modified": "2024-03-22 17:45:54.618462",
+ "modified_by": "Administrator",
+ "module": "luckybee_customization",
+ "name": "LuckyBee Dashboard",
+ "owner": "Administrator"
+}

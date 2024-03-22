@@ -5,7 +5,7 @@ from frappe.utils import today
 
 
 @frappe.whitelist()
-def search_and_insert_item(doc, description, hsn, qty, rate, per, disc_perc, disc, gst, mrp, lrp, brand, group, category, sub_category):
+def search_and_insert_item(doc, description, hsn, qty, rate, per, mrp, lrp, brand, group, category, sub_category,custom_asin,custom_box_number, custom_ean):
 	doc = json.loads(doc)
 
 	dict_itm = {}
@@ -13,9 +13,9 @@ def search_and_insert_item(doc, description, hsn, qty, rate, per, disc_perc, dis
 		# item_nt_exist=frappe.db.exists("Item", {"name":custom_purchase_item})
 		item_code_exist = frappe.db.get_value('Item', {'item_name': f'{description}'}, 'item_code')
 		# if disc_perc: 
-		rate = float(rate)
-		disc_perc = float(disc_perc)
-		discounted_price = rate - (rate * (disc_perc / 100))
+		# 	rate = float(rate)
+		# 	disc_perc = float(disc_perc)
+		# 	discounted_price = rate - (rate * (disc_perc / 100))
 
 		if not item_code_exist:
 			item = frappe.new_doc("Item")
@@ -36,16 +36,16 @@ def search_and_insert_item(doc, description, hsn, qty, rate, per, disc_perc, dis
 			item.ean = custom_ean
 
 			
-			# gst = ""
+			# # gst = ""
 			# if disc_perc:
-			if disc == "15.25":
-				gst = "GST 18% - SR"
-			elif disc == "10.71":
-				gst = "GST 12% - SR"
-			elif disc == "4.71":
-				gst = "GST 5% - SR"
-			row = item.append("taxes", {})
-			row.item_tax_template = gst
+			# 	if disc == "15.25":
+			# 		gst = "GST 18% - SR"
+			# 	elif disc == "10.71":
+			# 		gst = "GST 12% - SR"
+			# 	elif disc == "4.71":
+			# 		gst = "GST 5% - SR"
+			# 	row = item.append("taxes", {})
+			# 	row.item_tax_template = gst
 
 			# item.opening_stock=rate
 			# item.standard_rate=rate
@@ -56,12 +56,12 @@ def search_and_insert_item(doc, description, hsn, qty, rate, per, disc_perc, dis
 			barcode_row.barcode = item.item_code
 			item.save()
 			# if disc_perc:
-			create_item_price(item, lrp, discounted_price)
+			# 	create_item_price(item, lrp, discounted_price)
 		else:
 			item = frappe.get_doc("Item", item_code_exist)
 
 			# if disc_perc:
-			create_item_price(item, lrp, discounted_price)
+			# 	create_item_price(item, lrp, discounted_price)
 			frappe.log_error(title="item code ", message = f'item starts with: {(item.item_code).startswith("L1")}, length: { len(item.item_code)} , item:{ item_code_exist}')
 			frappe.log_error(title="MRP", message = f'item.custom_mrp: {item.custom_mrp}, mrp: {mrp}')
 			if item and (item.item_code).startswith("L1") and len(item.item_code) == 6:
@@ -81,43 +81,22 @@ def search_and_insert_item(doc, description, hsn, qty, rate, per, disc_perc, dis
 					item.custom_barcode = item.item_code
 					barcode_row = item.append("barcodes", {})
 					barcode_row.barcode = item.item_code
-				item.save()
-
-				time.sleep(5)
-		# if disc_perc:
-			# dict_itm.update({"item_code": frappe.db.get_value("Item", {"item_name": description}, 'item_code'),
-			# 				"qty": qty, "item_name": description, "uom": "Nos", "rate": discounted_price, "amount": int(qty)*float(discounted_price)})
-		item_code, reviews_rating = frappe.db.get_value("Item", {"item_name": description}, ['item_code', 'reviews_rating'])
+			item.save()
+			time.sleep(5)				
+		item_code, reviews_rating,new_current,reviews_count = frappe.db.get_value("Item", {"item_name": description}, ['item_code', 'reviews_rating','new_current','reviews_count'])
 		dict_itm.update({
 							"item_code": item_code,
 							"reviews_rating": reviews_rating,
 							"qty": qty,
 							"item_name": description,
 							"uom": "Nos",
-							"rate": discounted_price,
-							"amount": int(qty)*float(discounted_price)
+							"new_current":float(new_current) if new_current else 0,
+							"custom_asin":custom_asin,
+							"rate":rate,
+							"custom_box_number":custom_box_number,
+							"custom_reviews_count":int(reviews_count)
 						})
-		# else:
-		# 	item_code, reviews_rating,new_current,reviews_count = frappe.db.get_value("Item", {"item_name": description}, ['item_code', 'reviews_rating','new_current','reviews_count'])
-		# 	dict_itm.update({
-		# 						"item_code": item_code,
-		# 						"reviews_rating": reviews_rating,
-		# 						"qty": qty,
-		# 						"item_name": description,
-		# 						"uom": "Nos",
-		# 						"new_current":float(new_current) if new_current else 0,
-		# 						"custom_asin":custom_asin,
-		# 						"rate":rate,
-		# 						"custom_box_number":custom_box_number,
-		# 						"custom_reviews_count":int(reviews_count)
-		# 					})
-
-			# dict_itm.update({"item_code",'reviews_rating': frappe.db.get_value("Item", {"item_name": description}, ['item_code','reviews_rating']),
-			# 				"qty": qty, "item_name": description, "uom": "Nos"})
-		
-		# dict_itm.update({"item_code": frappe.db.get_value("Item", {"item_name": description}, 'item_code'),
-		# 					"qty": qty, "item_name": description, "uom": "Nos", "rate": rate, "amount": int(qty)*int(rate)})
-		return dict_itm
+	return dict_itm
 
 def create_item_price(item, lrp=None, discounted_price=None):
 	if not frappe.db.exists("Item Price", {"item_code": item.item_code, "price_list": "Standard Selling"}):
